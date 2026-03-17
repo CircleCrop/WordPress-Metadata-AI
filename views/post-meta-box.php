@@ -16,9 +16,9 @@
 	<?php endif; ?>
 </p>
 <?php if ( '' !== trim( (string) $post->post_excerpt ) ) : ?>
-	<p><strong><?php esc_html_e( 'Current excerpt:', 'wordpress-metadata-aigen' ); ?></strong> <?php echo esc_html( $post->post_excerpt ); ?></p>
+	<p><strong><?php esc_html_e( 'Current:', 'wordpress-metadata-aigen' ); ?></strong> <?php echo esc_html( $post->post_excerpt ); ?></p>
 <?php else : ?>
-	<p><?php esc_html_e( 'Current excerpt is empty.', 'wordpress-metadata-aigen' ); ?></p>
+	<p><?php esc_html_e( 'Current is empty.', 'wordpress-metadata-aigen' ); ?></p>
 <?php endif; ?>
 <p>
 	<label for="wmaigen-overwrite-existing-post">
