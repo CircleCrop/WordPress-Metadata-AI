@@ -23,9 +23,22 @@ final class TextSanitizer {
 		}
 
 		$normalized_lines = array();
+		$inside_code_fence = false;
 
 		foreach ( $lines as $line ) {
 			$line = (string) $line;
+
+			if ( self::is_code_fence_line( $line ) ) {
+				$normalized_lines[] = trim( $line );
+				$inside_code_fence  = ! $inside_code_fence;
+				continue;
+			}
+
+			if ( $inside_code_fence ) {
+				$normalized_lines[] = rtrim( $line );
+				continue;
+			}
+
 			$line = self::is_block_comment_line( $line )
 				? self::collapse_inline_whitespace( $line )
 				: self::collapse_inline_whitespace( wp_strip_all_tags( $line ) );
@@ -82,5 +95,9 @@ final class TextSanitizer {
 
 	private static function is_block_comment_line( string $text ): bool {
 		return 1 === preg_match( '/^\s*<!--\s*wp:[\s\S]*-->\s*$/u', $text );
+	}
+
+	private static function is_code_fence_line( string $text ): bool {
+		return 1 === preg_match( '/^\s*`{3,}[^`]*$/u', $text );
 	}
 }

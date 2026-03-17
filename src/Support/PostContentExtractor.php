@@ -88,6 +88,10 @@ final class PostContentExtractor {
 			return $this->wrap_line( $this->format_list_item( $block ) );
 		}
 
+		if ( 'core/code' === $block_name ) {
+			return $this->wrap_line( $this->format_code_block( $block ) );
+		}
+
 		if ( 'core/html' === $block_name ) {
 			return $this->wrap_line( $this->format_html_block( $block ) );
 		}
@@ -205,17 +209,46 @@ final class PostContentExtractor {
 			$html = $block['innerHTML'];
 		}
 
+		if ( $this->looks_like_code_block( $html ) ) {
+			return $this->build_fenced_code_block(
+				$this->extract_code_block_text( $html ),
+				$this->detect_code_language( $html )
+			);
+		}
+
 		$text = $this->extract_visible_text( $html );
 
 		if ( '' === $text ) {
 			return '';
 		}
 
-		if ( $this->looks_like_code_block( $html ) ) {
-			return sprintf( 'Code sample: %s', TextSanitizer::truncate( $text, 500 ) );
+		return $text;
+	}
+
+	/**
+	 * @param array<string, mixed> $block Parsed block payload.
+	 */
+	private function format_code_block( array $block ): string {
+		$html = '';
+
+		if ( isset( $block['innerHTML'] ) && is_string( $block['innerHTML'] ) ) {
+			$html = $block['innerHTML'];
 		}
 
-		return $text;
+		$language = '';
+
+		if ( isset( $block['attrs']['className'] ) && is_string( $block['attrs']['className'] ) ) {
+			$language = $this->detect_language_from_class_names( $block['attrs']['className'] );
+		}
+
+		if ( '' === $language ) {
+			$language = $this->detect_code_language( $html );
+		}
+
+		return $this->build_fenced_code_block(
+			$this->extract_code_block_text( $html ),
+			$language
+		);
 	}
 
 	/**
@@ -324,6 +357,76 @@ final class PostContentExtractor {
 
 	private function looks_like_code_block( string $html ): bool {
 		return false !== stripos( $html, '<pre' ) || false !== stripos( $html, '<code' );
+	}
+
+	private function extract_code_block_text( string $html ): string {
+		$code = $html;
+
+		if ( preg_match( '/<code\b[^>]*>(.*?)<\/code>/is', $html, $matches ) && isset( $matches[1] ) ) {
+			$code = (string) $matches[1];
+		} elseif ( preg_match( '/<pre\b[^>]*>(.*?)<\/pre>/is', $html, $matches ) && isset( $matches[1] ) ) {
+			$code = (string) $matches[1];
+		}
+
+		$code  = html_entity_decode( $code, ENT_QUOTES, get_bloginfo( 'charset' ) );
+		$code  = str_replace( array( "\r\n", "\r" ), "\n", $code );
+		$code  = wp_strip_all_tags( $code );
+		$lines = preg_split( "/\n/", $code );
+
+		if ( ! is_array( $lines ) ) {
+			return trim( $code );
+		}
+
+		$normalized_lines = array_map(
+			static function ( string $line ): string {
+				return rtrim( $line );
+			},
+			$lines
+		);
+
+		return trim( implode( "\n", $normalized_lines ), "\n" );
+	}
+
+	private function detect_code_language( string $html ): string {
+		if ( preg_match( '/(?:lang-|language-)([a-z0-9_+-]+)/i', $html, $matches ) && isset( $matches[1] ) ) {
+			return strtolower( (string) $matches[1] );
+		}
+
+		if ( preg_match_all( '/\bclass=(["\'])(.*?)\1/is', $html, $matches ) && isset( $matches[2] ) && is_array( $matches[2] ) ) {
+			foreach ( $matches[2] as $class_names ) {
+				$language = $this->detect_language_from_class_names( (string) $class_names );
+
+				if ( '' !== $language ) {
+					return $language;
+				}
+			}
+		}
+
+		return '';
+	}
+
+	private function detect_language_from_class_names( string $class_names ): string {
+		if ( preg_match( '/(?:^|\s)lang-([a-z0-9_+-]+)(?:\s|$)/i', $class_names, $matches ) && isset( $matches[1] ) ) {
+			return strtolower( (string) $matches[1] );
+		}
+
+		if ( preg_match( '/(?:^|\s)language-([a-z0-9_+-]+)(?:\s|$)/i', $class_names, $matches ) && isset( $matches[1] ) ) {
+			return strtolower( (string) $matches[1] );
+		}
+
+		return '';
+	}
+
+	private function build_fenced_code_block( string $code, string $language = '' ): string {
+		$code = trim( $code, "\n" );
+
+		if ( '' === $code ) {
+			return '';
+		}
+
+		$fence = false !== strpos( $code, '```' ) ? '````' : '```';
+
+		return sprintf( "%1\$s%2\$s\n%3\$s\n%1\$s", $fence, $language, $code );
 	}
 
 	/**
