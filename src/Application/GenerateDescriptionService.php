@@ -16,25 +16,10 @@ use WMAIGEN\Support\TextSanitizer;
  * Core generation orchestration shared by single and batch flows.
  */
 final class GenerateDescriptionService {
-	/**
-	 * @var SettingsRepository
-	 */
-	private $settings_repository;
-
-	/**
-	 * @var LogRepository
-	 */
-	private $log_repository;
-
-	/**
-	 * @var OpenAIClient
-	 */
-	private $openai_client;
-
-	/**
-	 * @var DescriptionWriter
-	 */
-	private $description_writer;
+	private SettingsRepository $settings_repository;
+	private LogRepository $log_repository;
+	private OpenAIClient $openai_client;
+	private DescriptionWriter $description_writer;
 
 	public function __construct(
 		SettingsRepository $settings_repository,
@@ -59,7 +44,7 @@ final class GenerateDescriptionService {
 			'ok',
 			sprintf(
 				/* translators: 1: AI model name, 2: think mode */
-				__( 'Loaded API configuration for model %1$s with think mode %2$s.', 'wordpress-metadata-aigen' ),
+				__( 'Loaded API configuration: model %1$s, think level: %2$s.', 'wordpress-metadata-aigen' ),
 				(string) $settings['model'],
 				$think_mode
 			),

@@ -1,73 +1,92 @@
 <svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="48" y1="40" x2="1228" y2="600" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#F5EFE2"/>
-      <stop offset="1" stop-color="#E3F0EC"/>
+      <stop stop-color="#F5EFE2" />
+      <stop offset="1" stop-color="#E3F0EC" />
     </linearGradient>
     <linearGradient id="card" x1="752" y1="120" x2="1128" y2="508" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#102E46"/>
-      <stop offset="1" stop-color="#16405F"/>
+      <stop stop-color="#102E46" />
+      <stop offset="1" stop-color="#16405F" />
     </linearGradient>
     <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#F97316"/>
-      <stop offset="1" stop-color="#FB923C"/>
+      <stop stop-color="#F97316" />
+      <stop offset="1" stop-color="#FB923C" />
     </linearGradient>
-    <filter id="shadow" x="680" y="82" width="510" height="482" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-      <feOffset dy="22"/>
-      <feGaussianBlur stdDeviation="22"/>
-      <feComposite in2="hardAlpha" operator="out"/>
-      <feColorMatrix type="matrix" values="0 0 0 0 0.0588235 0 0 0 0 0.176471 0 0 0 0 0.270588 0 0 0 0.16 0"/>
-      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
-      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+    <filter id="shadow" x="680" y="82" width="510" height="482" filterUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+        result="hardAlpha" />
+      <feOffset dy="22" />
+      <feGaussianBlur stdDeviation="22" />
+      <feComposite in2="hardAlpha" operator="out" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0588235 0 0 0 0 0.176471 0 0 0 0 0.270588 0 0 0 0.16 0" />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1" />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape" />
     </filter>
   </defs>
 
-  <rect x="24" y="24" width="1232" height="592" rx="36" fill="url(#bg)"/>
+  <rect x="24" y="24" width="1232" height="592" rx="36" fill="url(#bg)" />
 
-  <circle cx="1102" cy="110" r="92" fill="#F97316" opacity="0.12"/>
-  <circle cx="1120" cy="522" r="70" fill="#0F766E" opacity="0.10"/>
-  <circle cx="756" cy="536" r="52" fill="#0F2D45" opacity="0.08"/>
+  <circle cx="1102" cy="110" r="92" fill="#F97316" opacity="0.12" />
+  <circle cx="1120" cy="522" r="70" fill="#0F766E" opacity="0.10" />
+  <circle cx="756" cy="536" r="52" fill="#0F2D45" opacity="0.08" />
 
-  <rect x="96" y="82" width="236" height="52" rx="26" fill="#FFFFFF" fill-opacity="0.9"/>
-  <text x="214" y="116" fill="#102E46" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="19" font-weight="700" text-anchor="middle" letter-spacing="2">WORDPRESS PLUGIN</text>
+  <rect x="96" y="82" width="236" height="52" rx="26" fill="#FFFFFF" fill-opacity="0.9" />
+  <text x="214" y="116" fill="#102E46" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="19"
+    font-weight="700" text-anchor="middle" letter-spacing="2">WORDPRESS PLUGIN</text>
 
-  <text x="96" y="206" fill="#0F172A" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="60" font-weight="700">Metadata AI</text>
-  <text x="96" y="272" fill="#0F172A" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="60" font-weight="700">for WordPress</text>
+  <text x="96" y="206" fill="#0F172A" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="60"
+    font-weight="700">Metadata AI</text>
+  <text x="96" y="272" fill="#0F172A" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="60"
+    font-weight="700">for WordPress</text>
 
-  <text x="96" y="340" fill="#334155" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="26" font-weight="500">Generate excerpts and term descriptions</text>
-  <text x="96" y="376" fill="#334155" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="26" font-weight="500">directly from WordPress admin.</text>
+  <text x="96" y="340" fill="#334155" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="26"
+    font-weight="500">Generate excerpts and term descriptions</text>
+  <text x="96" y="376" fill="#334155" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="26"
+    font-weight="500">directly from WordPress admin.</text>
 
-  <rect x="96" y="436" width="164" height="44" rx="22" fill="#0F766E"/>
-  <rect x="274" y="436" width="180" height="44" rx="22" fill="#102E46"/>
-  <rect x="468" y="436" width="128" height="44" rx="22" fill="#F97316"/>
-  <text x="178" y="464" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle">Posts &amp; Pages</text>
-  <text x="364" y="464" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle">Categories &amp; Tags</text>
-  <text x="532" y="464" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle">Dry Run</text>
+  <rect x="96" y="436" width="164" height="44" rx="22" fill="#0F766E" />
+  <rect x="274" y="436" width="180" height="44" rx="22" fill="#102E46" />
+  <rect x="468" y="436" width="128" height="44" rx="22" fill="#F97316" />
+  <text x="178" y="464" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16"
+    font-weight="700" text-anchor="middle">Posts &amp; Pages</text>
+  <text x="364" y="464" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16"
+    font-weight="700" text-anchor="middle">Categories &amp; Tags</text>
+  <text x="532" y="464" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16"
+    font-weight="700" text-anchor="middle">Dry Run</text>
 
   <g filter="url(#shadow)">
-    <rect x="778" y="132" width="402" height="354" rx="28" fill="url(#card)"/>
+    <rect x="778" y="132" width="402" height="354" rx="28" fill="url(#card)" />
   </g>
 
-  <text x="810" y="182" fill="#F8FAFC" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="28" font-weight="700">Admin Workflow</text>
-  <text x="810" y="214" fill="#AFC2D2" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16" font-weight="500">Review first, then write to WordPress.</text>
+  <text x="810" y="182" fill="#F8FAFC" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="28"
+    font-weight="700">Admin Workflow</text>
+  <text x="810" y="214" fill="#AFC2D2" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16"
+    font-weight="500">Review first, then write to WordPress.</text>
 
-  <rect x="810" y="242" width="338" height="58" rx="18" fill="#FFFFFF" fill-opacity="0.10"/>
-  <circle cx="842" cy="271" r="10" fill="#34D399"/>
-  <text x="870" y="264" fill="#F8FAFC" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="15" font-weight="700">Input</text>
-  <text x="870" y="287" fill="#D5E3ED" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="500">Posts, pages, custom types, categories, tags</text>
+  <rect x="810" y="242" width="338" height="58" rx="18" fill="#FFFFFF" fill-opacity="0.10" />
+  <circle cx="842" cy="271" r="10" fill="#34D399" />
+  <text x="870" y="264" fill="#F8FAFC" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="15"
+    font-weight="700">Input</text>
+  <text x="870" y="287" fill="#D5E3ED" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13"
+    font-weight="500">Posts, pages, custom types, categories, tags</text>
 
-  <rect x="810" y="318" width="338" height="58" rx="18" fill="#FFFFFF" fill-opacity="0.10"/>
-  <circle cx="842" cy="347" r="10" fill="#FB923C"/>
-  <text x="870" y="340" fill="#F8FAFC" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="15" font-weight="700">Generation</text>
-  <text x="870" y="363" fill="#D5E3ED" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="500">One-sentence descriptions</text>
+  <rect x="810" y="318" width="338" height="58" rx="18" fill="#FFFFFF" fill-opacity="0.10" />
+  <circle cx="842" cy="347" r="10" fill="#FB923C" />
+  <text x="870" y="340" fill="#F8FAFC" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="15"
+    font-weight="700">Generation</text>
+  <text x="870" y="363" fill="#D5E3ED" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13"
+    font-weight="500">One-sentence descriptions</text>
 
-  <rect x="810" y="394" width="338" height="58" rx="18" fill="#FFFFFF" fill-opacity="0.10"/>
-  <circle cx="842" cy="423" r="10" fill="#60A5FA"/>
-  <text x="870" y="416" fill="#F8FAFC" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="15" font-weight="700">Output</text>
-  <text x="870" y="439" fill="#D5E3ED" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="500">Excerpts, term descriptions, logs</text>
+  <rect x="810" y="394" width="338" height="58" rx="18" fill="#FFFFFF" fill-opacity="0.10" />
+  <circle cx="842" cy="423" r="10" fill="#60A5FA" />
+  <text x="870" y="416" fill="#F8FAFC" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="15"
+    font-weight="700">Output</text>
+  <text x="870" y="439" fill="#D5E3ED" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13"
+    font-weight="500">Excerpts, term descriptions, logs</text>
 
-  <rect x="962" y="80" width="140" height="42" rx="21" fill="#FFFFFF"/>
-  <text x="1032" y="107" fill="#102E46" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle">v1.0.0</text>
+  <rect x="962" y="80" width="140" height="42" rx="21" fill="#FFFFFF" />
+  <text x="1032" y="107" fill="#102E46" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="17"
+    font-weight="700" text-anchor="middle">v1.0.0</text>
 </svg>

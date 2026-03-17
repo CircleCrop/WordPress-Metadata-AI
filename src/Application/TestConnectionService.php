@@ -14,20 +14,9 @@ use WMAIGEN\Support\TextSanitizer;
  * Lightweight API connectivity test for the settings page.
  */
 final class TestConnectionService {
-	/**
-	 * @var SettingsRepository
-	 */
-	private $settings_repository;
-
-	/**
-	 * @var LogRepository
-	 */
-	private $log_repository;
-
-	/**
-	 * @var OpenAIClient
-	 */
-	private $openai_client;
+	private SettingsRepository $settings_repository;
+	private LogRepository $log_repository;
+	private OpenAIClient $openai_client;
 
 	public function __construct( SettingsRepository $settings_repository, LogRepository $log_repository, OpenAIClient $openai_client ) {
 		$this->settings_repository = $settings_repository;

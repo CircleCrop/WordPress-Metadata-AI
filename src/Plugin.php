@@ -28,47 +28,12 @@ use WMAIGEN\Support\ViewRenderer;
  * Main plugin bootstrapper.
  */
 final class Plugin {
-	/**
-	 * Singleton plugin instance.
-	 *
-	 * @var Plugin|null
-	 */
-	private static $instance = null;
-
-	/**
-	 * Admin notice controller.
-	 *
-	 * @var AdminNotices
-	 */
-	private $admin_notices;
-
-	/**
-	 * Settings page controller.
-	 *
-	 * @var SettingsPage
-	 */
-	private $settings_page;
-
-	/**
-	 * Tools page controller.
-	 *
-	 * @var ToolsPage
-	 */
-	private $tools_page;
-
-	/**
-	 * Post editor integration.
-	 *
-	 * @var PostEditorPanel
-	 */
-	private $post_editor_panel;
-
-	/**
-	 * Term editor integration.
-	 *
-	 * @var TermEditorPanel
-	 */
-	private $term_editor_panel;
+	private static ?self $instance = null;
+	private AdminNotices $admin_notices;
+	private SettingsPage $settings_page;
+	private ToolsPage $tools_page;
+	private PostEditorPanel $post_editor_panel;
+	private TermEditorPanel $term_editor_panel;
 
 	/**
 	 * Boot the plugin once.

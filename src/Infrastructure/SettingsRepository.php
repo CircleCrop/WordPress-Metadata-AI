@@ -65,7 +65,7 @@ final class SettingsRepository {
 	public function get_think_mode( ?array $settings = null ): string {
 		$current = is_array( $settings ) ? $settings : $this->get();
 
-		return $this->normalize_think_mode( isset( $current['think_mode'] ) ? $current['think_mode'] : self::DEFAULT_THINK_MODE );
+		return self::normalize_supported_think_mode( isset( $current['think_mode'] ) ? $current['think_mode'] : self::DEFAULT_THINK_MODE );
 	}
 
 	/**
@@ -83,7 +83,7 @@ final class SettingsRepository {
 			'base_url'         => $base_url,
 			'api_key'          => $this->sanitize_text_setting( $raw_settings, 'api_key', (string) $defaults['api_key'] ),
 			'model'            => $this->sanitize_text_setting( $raw_settings, 'model', (string) $defaults['model'] ),
-			'think_mode'       => $this->normalize_think_mode(
+			'think_mode'       => self::normalize_supported_think_mode(
 				array_key_exists( 'think_mode', $raw_settings ) ? $raw_settings['think_mode'] : $defaults['think_mode']
 			),
 			'timeout'          => $this->normalize_timeout( array_key_exists( 'timeout', $raw_settings ) ? $raw_settings['timeout'] : $defaults['timeout'] ),
@@ -161,8 +161,8 @@ final class SettingsRepository {
 	/**
 	 * @param mixed $think_mode Raw think mode input.
 	 */
-	private function normalize_think_mode( $think_mode ): string {
-		$value = sanitize_key( $this->coerce_to_string( $think_mode ) );
+	public static function normalize_supported_think_mode( $think_mode ): string {
+		$value = sanitize_key( is_scalar( $think_mode ) ? (string) $think_mode : '' );
 
 		if ( in_array( $value, self::SUPPORTED_THINK_MODES, true ) ) {
 			return $value;

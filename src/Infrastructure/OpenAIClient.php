@@ -167,13 +167,7 @@ final class OpenAIClient {
 	 * @param mixed $think_mode Stored think mode setting.
 	 */
 	private function normalize_reasoning_effort( $think_mode ): string {
-		$value = sanitize_key( $this->coerce_to_string( $think_mode ) );
-
-		if ( in_array( $value, SettingsRepository::SUPPORTED_THINK_MODES, true ) ) {
-			return $value;
-		}
-
-		return SettingsRepository::DEFAULT_THINK_MODE;
+		return SettingsRepository::normalize_supported_think_mode( $think_mode );
 	}
 
 	private function is_output_block_type( string $type ): bool {
@@ -194,17 +188,6 @@ final class OpenAIClient {
 		$cleaned = preg_replace( '/^(?:\s*<(?:think|thinking)>.*?<\/(?:think|thinking)>\s*)+/is', '', $content );
 
 		return is_string( $cleaned ) ? trim( $cleaned ) : $content;
-	}
-
-	/**
-	 * @param mixed $value Unknown external input.
-	 */
-	private function coerce_to_string( $value ): string {
-		if ( ! is_scalar( $value ) ) {
-			return '';
-		}
-
-		return (string) $value;
 	}
 
 	private function ends_with( string $haystack, string $needle ): bool {
