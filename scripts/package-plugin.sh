@@ -65,6 +65,24 @@ copy_path() {
 	cp -R "${source_path}" "${STAGE_DIR}/"
 }
 
+copy_matching_paths() {
+	local pattern="$1"
+	local matched=0
+
+	shopt -s nullglob
+
+	for source_path in "${ROOT_DIR}"/${pattern}; do
+		matched=1
+		cp -R "${source_path}" "${STAGE_DIR}/"
+	done
+
+	shopt -u nullglob
+
+	if [[ ${matched} -eq 0 ]]; then
+		return 0
+	fi
+}
+
 copy_path "${PLUGIN_SLUG}.php"
 copy_path "src"
 copy_path "views"
@@ -72,7 +90,7 @@ copy_path "languages"
 copy_path "assets"
 copy_path "vendor"
 copy_path "readme.txt"
-copy_path "README.md"
+copy_matching_paths "README*.md"
 copy_path "LICENSE"
 copy_path "license.txt"
 
