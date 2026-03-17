@@ -169,11 +169,11 @@ final class OpenAIClient {
 	private function normalize_reasoning_effort( $think_mode ): string {
 		$value = sanitize_key( $this->coerce_to_string( $think_mode ) );
 
-		if ( in_array( $value, array( 'low', 'medium', 'high' ), true ) ) {
+		if ( in_array( $value, SettingsRepository::SUPPORTED_THINK_MODES, true ) ) {
 			return $value;
 		}
 
-		return 'medium';
+		return SettingsRepository::DEFAULT_THINK_MODE;
 	}
 
 	private function is_output_block_type( string $type ): bool {

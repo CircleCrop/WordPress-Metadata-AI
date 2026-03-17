@@ -13,7 +13,6 @@
 	<?php if ( $dry_run ) : ?>
 		<strong><?php esc_html_e( 'Dry Run is enabled.', 'wordpress-metadata-aigen' ); ?></strong>
 	<?php else : ?>
-		<?php esc_html_e( 'Generate a description and write it to the standard WordPress excerpt field.', 'wordpress-metadata-aigen' ); ?>
 	<?php endif; ?>
 </p>
 <?php if ( '' !== trim( (string) $post->post_excerpt ) ) : ?>

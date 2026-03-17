@@ -10,6 +10,12 @@ final class SettingsRepository {
 	public const THINK_MODE_LOW = 'low';
 	public const THINK_MODE_MEDIUM = 'medium';
 	public const THINK_MODE_HIGH = 'high';
+	public const DEFAULT_THINK_MODE = self::THINK_MODE_MEDIUM;
+	public const SUPPORTED_THINK_MODES = array(
+		self::THINK_MODE_LOW,
+		self::THINK_MODE_MEDIUM,
+		self::THINK_MODE_HIGH,
+	);
 
 	/**
 	 * @return array<string, mixed>
@@ -59,7 +65,7 @@ final class SettingsRepository {
 	public function get_think_mode( ?array $settings = null ): string {
 		$current = is_array( $settings ) ? $settings : $this->get();
 
-		return $this->normalize_think_mode( isset( $current['think_mode'] ) ? $current['think_mode'] : self::THINK_MODE_MEDIUM );
+		return $this->normalize_think_mode( isset( $current['think_mode'] ) ? $current['think_mode'] : self::DEFAULT_THINK_MODE );
 	}
 
 	/**
@@ -95,7 +101,7 @@ final class SettingsRepository {
 			'base_url'         => 'https://api.openai.com/v1',
 			'api_key'          => '',
 			'model'            => '',
-			'think_mode'       => self::THINK_MODE_MEDIUM,
+			'think_mode'       => self::DEFAULT_THINK_MODE,
 			'timeout'          => 30,
 			'dry_run'          => 1,
 			'prompt_post_like' => 'You write clear WordPress excerpts. Return one complete sentence in plain text. Keep it moderate in length, do not copy the opening paragraph verbatim, and avoid truncated fragments or title-like stubs.',
@@ -158,22 +164,11 @@ final class SettingsRepository {
 	private function normalize_think_mode( $think_mode ): string {
 		$value = sanitize_key( $this->coerce_to_string( $think_mode ) );
 
-		if ( in_array( $value, $this->get_supported_think_modes(), true ) ) {
+		if ( in_array( $value, self::SUPPORTED_THINK_MODES, true ) ) {
 			return $value;
 		}
 
-		return self::THINK_MODE_MEDIUM;
-	}
-
-	/**
-	 * @return array<int, string>
-	 */
-	private function get_supported_think_modes(): array {
-		return array(
-			self::THINK_MODE_LOW,
-			self::THINK_MODE_MEDIUM,
-			self::THINK_MODE_HIGH,
-		);
+		return self::DEFAULT_THINK_MODE;
 	}
 
 	/**

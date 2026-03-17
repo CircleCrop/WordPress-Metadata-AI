@@ -152,26 +152,11 @@ final class GenerateDescriptionService {
 				sprintf( 'Title: %s', '' !== $title ? $title : '[empty]' ),
 				sprintf( 'Current description: %s', '' !== $current ? $current : '[empty]' ),
 				sprintf( 'Source content: %s', '' !== $content ? $content : '[empty]' ),
-				$this->build_output_requirements(),
+				'Requirements: Return plain text only.',
 				$dry_run ? 'Mode: Dry Run preview only.' : 'Mode: Save-ready output.',
 			)
 		);
 
 		return new GenerationContext( $target, $system_prompt, $user_prompt, $dry_run );
-	}
-
-	private function build_output_requirements(): string {
-		return implode(
-			' ',
-			array(
-				'Requirements:',
-				'Return plain text only.',
-				'Use one complete sentence.',
-				'Keep it moderate in length.',
-				'Do not copy the first paragraph verbatim.',
-				'Do not output a title fragment, bullets, or HTML.',
-				'Do not output chain-of-thought, analysis, or reasoning notes.',
-			)
-		);
 	}
 }

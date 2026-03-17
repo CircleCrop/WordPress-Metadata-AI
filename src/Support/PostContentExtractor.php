@@ -368,9 +368,10 @@ final class PostContentExtractor {
 			$code = (string) $matches[1];
 		}
 
-		$code  = html_entity_decode( $code, ENT_QUOTES, get_bloginfo( 'charset' ) );
+		$code  = preg_replace( '/<\/?(?:em|strong|b|i|mark|span)\b[^>]*>/i', '', $code );
+		$code  = preg_replace( '/<br\s*\/?>/i', "\n", is_string( $code ) ? $code : '' );
+		$code  = html_entity_decode( is_string( $code ) ? $code : '', ENT_QUOTES, get_bloginfo( 'charset' ) );
 		$code  = str_replace( array( "\r\n", "\r" ), "\n", $code );
-		$code  = wp_strip_all_tags( $code );
 		$lines = preg_split( "/\n/", $code );
 
 		if ( ! is_array( $lines ) ) {
