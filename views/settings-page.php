@@ -37,6 +37,17 @@
 					</td>
 				</tr>
 				<tr>
+					<th scope="row"><label for="wmaigen-think-mode"><?php esc_html_e( 'Think Mode', 'wordpress-metadata-aigen' ); ?></label></th>
+					<td>
+						<select id="wmaigen-think-mode" name="wmaigen_settings[think_mode]">
+							<option value="low" <?php selected( (string) $settings['think_mode'], 'low' ); ?>><?php esc_html_e( 'low', 'wordpress-metadata-aigen' ); ?></option>
+							<option value="medium" <?php selected( (string) $settings['think_mode'], 'medium' ); ?>><?php esc_html_e( 'medium', 'wordpress-metadata-aigen' ); ?></option>
+							<option value="high" <?php selected( (string) $settings['think_mode'], 'high' ); ?>><?php esc_html_e( 'high', 'wordpress-metadata-aigen' ); ?></option>
+						</select>
+						<p class="description"><?php esc_html_e( 'Controls reasoning effort for compatible reasoning models. The plugin only exposes low, medium, and high.', 'wordpress-metadata-aigen' ); ?></p>
+					</td>
+				</tr>
+				<tr>
 					<th scope="row"><label for="wmaigen-timeout"><?php esc_html_e( 'Timeout (seconds)', 'wordpress-metadata-aigen' ); ?></label></th>
 					<td>
 						<input id="wmaigen-timeout" name="wmaigen_settings[timeout]" type="number" min="5" max="120" class="small-text" value="<?php echo esc_attr( (string) $settings['timeout'] ); ?>">

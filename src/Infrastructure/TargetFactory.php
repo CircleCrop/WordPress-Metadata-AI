@@ -4,6 +4,7 @@ namespace WMAIGEN\Infrastructure;
 
 use WMAIGEN\Domain\GenerationTarget;
 use WMAIGEN\Support\ObjectTypeRegistry;
+use WMAIGEN\Support\PostContentExtractor;
 
 /**
  * Build unified generation targets from WordPress objects.
@@ -15,9 +16,11 @@ final class TargetFactory {
 	 * @var ObjectTypeRegistry
 	 */
 	private $object_type_registry;
+	private PostContentExtractor $post_content_extractor;
 
-	public function __construct( ObjectTypeRegistry $object_type_registry ) {
+	public function __construct( ObjectTypeRegistry $object_type_registry, PostContentExtractor $post_content_extractor ) {
 		$this->object_type_registry = $object_type_registry;
+		$this->post_content_extractor = $post_content_extractor;
 	}
 
 	/**
@@ -47,7 +50,7 @@ final class TargetFactory {
 			(string) $post->post_type,
 			(int) $post->ID,
 			(string) get_the_title( $post ),
-			(string) $post->post_content,
+			$this->post_content_extractor->extract( (string) $post->post_content ),
 			(string) $post->post_excerpt,
 			(string) get_edit_post_link( $post->ID, 'raw' )
 		);

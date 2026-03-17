@@ -3,7 +3,7 @@
  * Plugin Name: WordPress Metadata AI Generator
  * Plugin URI:  https://example.com/
  * Description: Generate WordPress excerpts and taxonomy descriptions with an OpenAI-compatible API.
- * Version:     0.1.1
+ * Version:     0.1.2
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * Author:      Circle Crop
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WMAIGEN_VERSION', '0.1.1' );
+define( 'WMAIGEN_VERSION', '0.1.2' );
 define( 'WMAIGEN_PLUGIN_FILE', __FILE__ );
 define( 'WMAIGEN_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WMAIGEN_VIEWS_DIR', WMAIGEN_PLUGIN_DIR . 'views/' );

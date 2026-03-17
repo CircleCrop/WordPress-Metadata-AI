@@ -49,17 +49,19 @@ final class GenerateDescriptionService {
 	}
 
 	public function generate( GenerationTarget $target, bool $overwrite = false ): GenerationResult {
-		$settings = $this->settings_repository->get();
-		$dry_run  = ! empty( $settings['dry_run'] );
+		$settings   = $this->settings_repository->get();
+		$dry_run    = $this->settings_repository->is_dry_run_enabled( $settings );
+		$think_mode = $this->settings_repository->get_think_mode( $settings );
 
 		$this->log_repository->log(
 			'info',
 			'configuration_read',
 			'ok',
 			sprintf(
-				/* translators: %s: AI model name */
-				__( 'Loaded API configuration for model %s.', 'wordpress-metadata-aigen' ),
-				(string) $settings['model']
+				/* translators: 1: AI model name, 2: think mode */
+				__( 'Loaded API configuration for model %1$s with think mode %2$s.', 'wordpress-metadata-aigen' ),
+				(string) $settings['model'],
+				$think_mode
 			),
 			$target->to_log_context()
 		);
@@ -139,7 +141,7 @@ final class GenerateDescriptionService {
 	private function build_context( GenerationTarget $target, array $settings, bool $dry_run ): GenerationContext {
 		$system_prompt = isset( $settings[ $target->get_prompt_key() ] ) ? (string) $settings[ $target->get_prompt_key() ] : '';
 		$title         = TextSanitizer::normalize_for_prompt( $target->get_title(), 200 );
-		$content       = TextSanitizer::normalize_for_prompt( $target->get_content(), 4000 );
+		$content       = TextSanitizer::normalize_multiline_for_prompt( $target->get_content(), 4000 );
 		$current       = TextSanitizer::normalize_for_prompt( $target->get_current_description(), 500 );
 
 		$user_prompt = implode(
@@ -150,11 +152,26 @@ final class GenerateDescriptionService {
 				sprintf( 'Title: %s', '' !== $title ? $title : '[empty]' ),
 				sprintf( 'Current description: %s', '' !== $current ? $current : '[empty]' ),
 				sprintf( 'Source content: %s', '' !== $content ? $content : '[empty]' ),
-				'Requirements: Return plain text only. Use one complete sentence. Keep it moderate in length. Do not copy the first paragraph verbatim. Do not output a title fragment, bullets, or HTML.',
+				$this->build_output_requirements(),
 				$dry_run ? 'Mode: Dry Run preview only.' : 'Mode: Save-ready output.',
 			)
 		);
 
 		return new GenerationContext( $target, $system_prompt, $user_prompt, $dry_run );
+	}
+
+	private function build_output_requirements(): string {
+		return implode(
+			' ',
+			array(
+				'Requirements:',
+				'Return plain text only.',
+				'Use one complete sentence.',
+				'Keep it moderate in length.',
+				'Do not copy the first paragraph verbatim.',
+				'Do not output a title fragment, bullets, or HTML.',
+				'Do not output chain-of-thought, analysis, or reasoning notes.',
+			)
+		);
 	}
 }

@@ -15,8 +15,9 @@ final class OpenAIClient {
 	public function request_description( GenerationContext $context, array $settings ) {
 		$endpoint = $this->build_endpoint( (string) $settings['base_url'] );
 		$payload  = array(
-			'model'    => (string) $settings['model'],
-			'messages' => array(
+			'model'             => (string) $settings['model'],
+			'reasoning_effort'  => $this->normalize_reasoning_effort( isset( $settings['think_mode'] ) ? $settings['think_mode'] : '' ),
+			'messages'          => array(
 				array(
 					'role'    => 'system',
 					'content' => $context->get_system_prompt(),
@@ -90,7 +91,7 @@ final class OpenAIClient {
 	 */
 	private function extract_message_content( array $decoded ): string {
 		if ( isset( $decoded['choices'][0]['message']['content'] ) && is_string( $decoded['choices'][0]['message']['content'] ) ) {
-			return $decoded['choices'][0]['message']['content'];
+			return $this->strip_reasoning_artifacts( $decoded['choices'][0]['message']['content'] );
 		}
 
 		if ( isset( $decoded['choices'][0]['message']['content'] ) && is_array( $decoded['choices'][0]['message']['content'] ) ) {
@@ -98,7 +99,7 @@ final class OpenAIClient {
 		}
 
 		if ( isset( $decoded['choices'][0]['text'] ) && is_string( $decoded['choices'][0]['text'] ) ) {
-			return $decoded['choices'][0]['text'];
+			return $this->strip_reasoning_artifacts( $decoded['choices'][0]['text'] );
 		}
 
 		return '';
@@ -111,12 +112,39 @@ final class OpenAIClient {
 		$parts = array();
 
 		foreach ( $content_blocks as $block ) {
-			if ( is_array( $block ) && isset( $block['text'] ) && is_string( $block['text'] ) ) {
-				$parts[] = $block['text'];
+			$text = $this->extract_content_block_text( $block );
+
+			if ( '' !== $text ) {
+				$parts[] = $text;
 			}
 		}
 
-		return implode( "\n", $parts );
+		return $this->strip_reasoning_artifacts( implode( "\n", $parts ) );
+	}
+
+	/**
+	 * @param mixed $block Response message block.
+	 */
+	private function extract_content_block_text( $block ): string {
+		if ( ! is_array( $block ) ) {
+			return '';
+		}
+
+		$type = isset( $block['type'] ) && is_string( $block['type'] ) ? sanitize_key( $block['type'] ) : '';
+
+		if ( $this->is_reasoning_block_type( $type ) ) {
+			return '';
+		}
+
+		if ( isset( $block['text'] ) && is_string( $block['text'] ) && $this->is_output_block_type( $type ) ) {
+			return $block['text'];
+		}
+
+		if ( isset( $block['text'] ) && is_array( $block['text'] ) && isset( $block['text']['value'] ) && is_string( $block['text']['value'] ) && $this->is_output_block_type( $type ) ) {
+			return $block['text']['value'];
+		}
+
+		return '';
 	}
 
 	private function extract_error_message( string $body ): string {
@@ -133,6 +161,50 @@ final class OpenAIClient {
 		}
 
 		return $body;
+	}
+
+	/**
+	 * @param mixed $think_mode Stored think mode setting.
+	 */
+	private function normalize_reasoning_effort( $think_mode ): string {
+		$value = sanitize_key( $this->coerce_to_string( $think_mode ) );
+
+		if ( in_array( $value, array( 'low', 'medium', 'high' ), true ) ) {
+			return $value;
+		}
+
+		return 'medium';
+	}
+
+	private function is_output_block_type( string $type ): bool {
+		return '' === $type || in_array( $type, array( 'text', 'output_text' ), true );
+	}
+
+	private function is_reasoning_block_type( string $type ): bool {
+		return in_array( $type, array( 'analysis', 'reasoning', 'reasoning_content', 'reasoning_text', 'thinking', 'thought' ), true );
+	}
+
+	private function strip_reasoning_artifacts( string $content ): string {
+		$content = trim( $content );
+
+		if ( '' === $content ) {
+			return '';
+		}
+
+		$cleaned = preg_replace( '/^(?:\s*<(?:think|thinking)>.*?<\/(?:think|thinking)>\s*)+/is', '', $content );
+
+		return is_string( $cleaned ) ? trim( $cleaned ) : $content;
+	}
+
+	/**
+	 * @param mixed $value Unknown external input.
+	 */
+	private function coerce_to_string( $value ): string {
+		if ( ! is_scalar( $value ) ) {
+			return '';
+		}
+
+		return (string) $value;
 	}
 
 	private function ends_with( string $haystack, string $needle ): bool {

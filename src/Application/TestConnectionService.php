@@ -39,13 +39,18 @@ final class TestConnectionService {
 	 * @return array<string, string|bool>
 	 */
 	public function run(): array {
-		$settings = $this->settings_repository->get();
+		$settings   = $this->settings_repository->get();
+		$think_mode = $this->settings_repository->get_think_mode( $settings );
 
 		$this->log_repository->log(
 			'info',
 			'configuration_read',
 			'ok',
-			__( 'Loaded API configuration for connection testing.', 'wordpress-metadata-aigen' ),
+			sprintf(
+				/* translators: %s: think mode */
+				__( 'Loaded API configuration for connection testing with think mode %s.', 'wordpress-metadata-aigen' ),
+				$think_mode
+			),
 			array( 'object_kind' => 'system', 'object_subtype' => 'settings', 'object_name' => 'API connection test' )
 		);
 
@@ -61,8 +66,8 @@ final class TestConnectionService {
 		$target  = new GenerationTarget( 'system', 'settings', 0, 'Connection Test', 'Return the single word Connected.', '', '' );
 		$context = new GenerationContext(
 			$target,
-			'You are testing an API connection. Return a very short plain text response.',
-			'Reply with the single word Connected.',
+			'You are testing an API connection. Return a very short plain text response with no reasoning or analysis.',
+			'Reply with the single word Connected. Do not include reasoning, analysis, or extra text.',
 			false
 		);
 

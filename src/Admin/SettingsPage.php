@@ -78,18 +78,20 @@ final class SettingsPage extends AbstractManageOptionsPage {
 			'settings_saved',
 			'success',
 			sprintf(
-				/* translators: %s: dry run status */
-				__( 'Plugin settings were updated. Dry Run is now %s.', 'wordpress-metadata-aigen' ),
-				! empty( $saved_settings['dry_run'] ) ? __( 'enabled', 'wordpress-metadata-aigen' ) : __( 'disabled', 'wordpress-metadata-aigen' )
+				/* translators: 1: dry run status, 2: think mode */
+				__( 'Plugin settings were updated. Dry Run is now %1$s. Think Mode: %2$s.', 'wordpress-metadata-aigen' ),
+				! empty( $saved_settings['dry_run'] ) ? __( 'enabled', 'wordpress-metadata-aigen' ) : __( 'disabled', 'wordpress-metadata-aigen' ),
+				$this->settings_repository->get_think_mode( $saved_settings )
 			),
 			array( 'object_kind' => 'system', 'object_subtype' => 'settings', 'object_name' => 'Plugin settings' )
 		);
 		$this->notice_repository->add(
 			'success',
 			sprintf(
-				/* translators: %s: dry run status */
-				__( 'Settings saved successfully. Dry Run is now %s.', 'wordpress-metadata-aigen' ),
-				! empty( $saved_settings['dry_run'] ) ? __( 'enabled', 'wordpress-metadata-aigen' ) : __( 'disabled', 'wordpress-metadata-aigen' )
+				/* translators: 1: dry run status, 2: think mode */
+				__( 'Settings saved successfully. Dry Run is now %1$s. Think Mode: %2$s.', 'wordpress-metadata-aigen' ),
+				! empty( $saved_settings['dry_run'] ) ? __( 'enabled', 'wordpress-metadata-aigen' ) : __( 'disabled', 'wordpress-metadata-aigen' ),
+				$this->settings_repository->get_think_mode( $saved_settings )
 			)
 		);
 

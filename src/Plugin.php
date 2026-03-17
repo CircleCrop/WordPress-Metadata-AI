@@ -20,6 +20,7 @@ use WMAIGEN\Infrastructure\SettingsRepository;
 use WMAIGEN\Infrastructure\TargetFactory;
 use WMAIGEN\Support\GenerationNoticeFormatter;
 use WMAIGEN\Support\ObjectTypeRegistry;
+use WMAIGEN\Support\PostContentExtractor;
 use WMAIGEN\Support\TimeFormatter;
 use WMAIGEN\Support\ViewRenderer;
 
@@ -90,10 +91,11 @@ final class Plugin {
 		$notice_repository    = new NoticeRepository();
 		$batch_state_repo     = new BatchStateRepository();
 		$object_type_registry = new ObjectTypeRegistry();
+		$post_content_extractor = new PostContentExtractor();
 		$notice_formatter     = new GenerationNoticeFormatter();
 		$view_renderer        = new ViewRenderer();
 		$time_formatter       = new TimeFormatter();
-		$target_factory       = new TargetFactory( $object_type_registry );
+		$target_factory       = new TargetFactory( $object_type_registry, $post_content_extractor );
 		$description_writer   = new DescriptionWriter();
 		$openai_client        = new OpenAIClient();
 
