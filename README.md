@@ -152,8 +152,6 @@ wordpress-metadata-aigen/
 
 ## 开发与打包
 
-这个项目没有前端构建链，主要是纯 PHP 插件代码。打包脚本会先对 PHP 文件执行语法检查，再生成发布 ZIP。
-
 ```bash
 bash scripts/package-plugin.sh
 ```
@@ -170,12 +168,3 @@ bash scripts/package-plugin.sh
 - 不写入 Yoast、Rank Math 等 SEO 插件私有字段
 - 不生成图片 `alt`、Open Graph、标题或正文
 - 批量运行是单次同步流程，不带断点续跑或任务队列
-
-## 为什么写标准字段
-
-这个插件的策略很简单：让 AI 生成结果优先进入 WordPress 原生字段，而不是把逻辑耦合到某个 SEO 插件的数据结构里。这样做的好处是：
-
-- 数据更可迁移
-- 站点停用插件后内容依然保留
-- 下游 SEO 插件或主题可以继续读取标准字段
-- 首版实现更简单，也更容易维护

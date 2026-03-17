@@ -12,7 +12,7 @@
       <stop stop-color="#F97316"/>
       <stop offset="1" stop-color="#FB923C"/>
     </linearGradient>
-    <filter id="shadow" x="692" y="84" width="510" height="478" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+    <filter id="shadow" x="700" y="74" width="556" height="532" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
       <feFlood flood-opacity="0" result="BackgroundImageFix"/>
       <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
       <feOffset dx="0" dy="24"/>
@@ -26,48 +26,44 @@
 
   <rect x="24" y="24" width="1232" height="592" rx="36" fill="url(#bg)"/>
 
-  <circle cx="1054" cy="110" r="94" fill="url(#accent)" opacity="0.96"/>
+  <circle cx="1076" cy="114" r="104" fill="url(#accent)" opacity="0.96"/>
   <circle cx="1112" cy="532" r="70" fill="#0F766E" opacity="0.14"/>
   <circle cx="768" cy="544" r="48" fill="#F97316" opacity="0.12"/>
   <path d="M102 110C102 92.3269 116.327 78 134 78H374C391.673 78 406 92.3269 406 110V114C406 131.673 391.673 146 374 146H134C116.327 146 102 131.673 102 114V110Z" fill="#FFFFFF" fill-opacity="0.92"/>
-  <path d="M98 492C98 474.327 112.327 460 130 460H410C427.673 460 442 474.327 442 492V494C442 511.673 427.673 526 410 526H130C112.327 526 98 511.673 98 494V492Z" fill="#FFFFFF" fill-opacity="0.76"/>
-
   <text x="128" y="116" fill="#0F2D45" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="3">WORDPRESS PLUGIN</text>
-  <text x="100" y="220" fill="#0F172A" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="64" font-weight="700">WordPress Metadata</text>
-  <text x="100" y="288" fill="#0F172A" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="64" font-weight="700">AI Generator</text>
-  <text x="100" y="344" fill="#334155" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="28" font-weight="500">AI descriptions for excerpts, categories, tags,</text>
-  <text x="100" y="384" fill="#334155" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="28" font-weight="500">and WordPress content workflows.</text>
+  <text x="100" y="228" fill="#0F172A" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="64" font-weight="700">WordPress Metadata</text>
+  <text x="100" y="296" fill="#0F172A" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="64" font-weight="700">AI Generator</text>
+  <text x="100" y="366" fill="#334155" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="28" font-weight="500">AI descriptions for excerpts, categories, tags,</text>
+  <text x="100" y="406" fill="#334155" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="28" font-weight="500">and WordPress content workflows.</text>
 
-  <rect x="100" y="430" width="164" height="40" rx="20" fill="#0F766E"/>
-  <rect x="276" y="430" width="118" height="40" rx="20" fill="#0F2D45"/>
-  <rect x="406" y="430" width="144" height="40" rx="20" fill="#F97316"/>
-  <text x="128" y="455" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16" font-weight="700">OpenAI Compatible</text>
-  <text x="307" y="455" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16" font-weight="700">Dry Run</text>
-  <text x="439" y="455" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16" font-weight="700">Batch Tools</text>
-
-  <text x="128" y="514" fill="#475569" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="22" font-weight="600">Generate first. Review output. Write to core fields.</text>
+  <rect x="100" y="464" width="170" height="44" rx="22" fill="#0F766E"/>
+  <rect x="284" y="464" width="130" height="44" rx="22" fill="#0F2D45"/>
+  <rect x="428" y="464" width="158" height="44" rx="22" fill="#F97316"/>
+  <text x="185" y="492" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle">OpenAI API</text>
+  <text x="349" y="492" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle">Dry Run</text>
+  <text x="507" y="492" fill="#FFFFFF" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle">Batch Tools</text>
 
   <g filter="url(#shadow)">
-    <rect x="740" y="108" width="414" height="382" rx="28" fill="url(#panel)"/>
+    <rect x="760" y="94" width="456" height="444" rx="32" fill="url(#panel)"/>
   </g>
 
-  <rect x="776" y="146" width="342" height="48" rx="16" fill="#F8FAFC" fill-opacity="0.08"/>
-  <circle cx="808" cy="170" r="7" fill="#F97316"/>
-  <circle cx="832" cy="170" r="7" fill="#FACC15"/>
-  <circle cx="856" cy="170" r="7" fill="#34D399"/>
-  <text x="892" y="176" fill="#E2E8F0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700">/chat/completions</text>
+  <rect x="800" y="134" width="376" height="56" rx="18" fill="#F8FAFC" fill-opacity="0.08"/>
+  <circle cx="838" cy="162" r="8" fill="#F97316"/>
+  <circle cx="868" cy="162" r="8" fill="#FACC15"/>
+  <circle cx="898" cy="162" r="8" fill="#34D399"/>
+  <text x="1010" y="170" fill="#E2E8F0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700" text-anchor="middle">/chat/completions</text>
 
-  <rect x="776" y="222" width="342" height="86" rx="20" fill="#FFFFFF" fill-opacity="0.08"/>
-  <text x="804" y="255" fill="#94A3B8" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="17" font-weight="700">target_kind</text>
-  <text x="804" y="286" fill="#F8FAFC" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700">post | page | term</text>
+  <rect x="800" y="222" width="376" height="118" rx="24" fill="#FFFFFF" fill-opacity="0.08"/>
+  <text x="988" y="268" fill="#94A3B8" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="17" font-weight="700" text-anchor="middle">target_kind</text>
+  <text x="988" y="318" fill="#F8FAFC" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" text-anchor="middle">post | page | term</text>
 
-  <rect x="776" y="326" width="160" height="112" rx="20" fill="#FFFFFF" fill-opacity="0.08"/>
-  <rect x="958" y="326" width="160" height="112" rx="20" fill="#FFFFFF" fill-opacity="0.08"/>
-  <text x="804" y="358" fill="#94A3B8" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="700">output</text>
-  <text x="804" y="389" fill="#F8FAFC" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700">post_excerpt</text>
-  <text x="986" y="358" fill="#94A3B8" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="700">mode</text>
-  <text x="986" y="389" fill="#F8FAFC" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700">dry_run=true</text>
+  <rect x="800" y="372" width="172" height="134" rx="24" fill="#FFFFFF" fill-opacity="0.08"/>
+  <rect x="1004" y="372" width="172" height="134" rx="24" fill="#FFFFFF" fill-opacity="0.08"/>
+  <text x="886" y="418" fill="#94A3B8" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle">output</text>
+  <text x="886" y="478" fill="#F8FAFC" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700" text-anchor="middle">post_excerpt</text>
+  <text x="1090" y="418" fill="#94A3B8" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle">mode</text>
+  <text x="1090" y="478" fill="#F8FAFC" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700" text-anchor="middle">dry_run=true</text>
 
-  <rect x="920" y="76" width="184" height="44" rx="22" fill="#FFFFFF"/>
-  <text x="956" y="104" fill="#0F2D45" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="18" font-weight="700">v0.1.1</text>
+  <rect x="948" y="56" width="188" height="50" rx="25" fill="#FFFFFF"/>
+  <text x="1042" y="88" fill="#0F2D45" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">v0.1.1</text>
 </svg>
