@@ -18,6 +18,7 @@ use WMAIGEN\Infrastructure\NoticeRepository;
 use WMAIGEN\Infrastructure\OpenAIClient;
 use WMAIGEN\Infrastructure\SettingsRepository;
 use WMAIGEN\Infrastructure\TargetFactory;
+use WMAIGEN\Support\GenerationNoticeFormatter;
 use WMAIGEN\Support\ObjectTypeRegistry;
 use WMAIGEN\Support\TimeFormatter;
 use WMAIGEN\Support\ViewRenderer;
@@ -89,6 +90,7 @@ final class Plugin {
 		$notice_repository    = new NoticeRepository();
 		$batch_state_repo     = new BatchStateRepository();
 		$object_type_registry = new ObjectTypeRegistry();
+		$notice_formatter     = new GenerationNoticeFormatter();
 		$view_renderer        = new ViewRenderer();
 		$time_formatter       = new TimeFormatter();
 		$target_factory       = new TargetFactory( $object_type_registry );
@@ -146,6 +148,7 @@ final class Plugin {
 			$target_factory,
 			$generate_service,
 			$notice_repository,
+			$notice_formatter,
 			$view_renderer
 		);
 		$this->term_editor_panel = new TermEditorPanel(
@@ -154,6 +157,7 @@ final class Plugin {
 			$target_factory,
 			$generate_service,
 			$notice_repository,
+			$notice_formatter,
 			$view_renderer
 		);
 	}

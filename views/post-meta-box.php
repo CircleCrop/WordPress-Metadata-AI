@@ -12,7 +12,6 @@
 <p>
 	<?php if ( $dry_run ) : ?>
 		<strong><?php esc_html_e( 'Dry Run is enabled.', 'wordpress-metadata-aigen' ); ?></strong>
-		<?php esc_html_e( 'The generated description will be previewed in an admin notice and not written to the excerpt field.', 'wordpress-metadata-aigen' ); ?>
 	<?php else : ?>
 		<?php esc_html_e( 'Generate a description and write it to the standard WordPress excerpt field.', 'wordpress-metadata-aigen' ); ?>
 	<?php endif; ?>
@@ -42,7 +41,4 @@
 	>
 		<?php esc_html_e( 'Save and Generate Description', 'wordpress-metadata-aigen' ); ?>
 	</button>
-</p>
-<p class="description">
-	<?php esc_html_e( 'This button submits the normal editor form first, then runs generation. Any other post changes on the screen will also be saved.', 'wordpress-metadata-aigen' ); ?>
 </p>

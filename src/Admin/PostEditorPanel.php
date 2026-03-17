@@ -2,71 +2,10 @@
 
 namespace WMAIGEN\Admin;
 
-use WMAIGEN\Application\GenerateDescriptionService;
-use WMAIGEN\Domain\GenerationResult;
-use WMAIGEN\Infrastructure\NoticeRepository;
-use WMAIGEN\Infrastructure\SettingsRepository;
-use WMAIGEN\Infrastructure\TargetFactory;
-use WMAIGEN\Support\ObjectTypeRegistry;
-use WMAIGEN\Support\ViewRenderer;
-
 /**
  * Add single-item generation controls to supported post edit screens.
  */
-final class PostEditorPanel {
-	/**
-	 * @var ObjectTypeRegistry
-	 */
-	private $object_type_registry;
-
-	/**
-	 * @var SettingsRepository
-	 */
-	private $settings_repository;
-
-	/**
-	 * @var TargetFactory
-	 */
-	private $target_factory;
-
-	/**
-	 * @var GenerateDescriptionService
-	 */
-	private $generate_service;
-
-	/**
-	 * @var NoticeRepository
-	 */
-	private $notice_repository;
-
-	/**
-	 * @var ViewRenderer
-	 */
-	private $view_renderer;
-
-	/**
-	 * Prevent save recursion while excerpt updates are written.
-	 *
-	 * @var bool
-	 */
-	private $is_generating = false;
-
-	public function __construct(
-		ObjectTypeRegistry $object_type_registry,
-		SettingsRepository $settings_repository,
-		TargetFactory $target_factory,
-		GenerateDescriptionService $generate_service,
-		NoticeRepository $notice_repository,
-		ViewRenderer $view_renderer
-	) {
-		$this->object_type_registry = $object_type_registry;
-		$this->settings_repository  = $settings_repository;
-		$this->target_factory       = $target_factory;
-		$this->generate_service     = $generate_service;
-		$this->notice_repository    = $notice_repository;
-		$this->view_renderer        = $view_renderer;
-	}
-
+final class PostEditorPanel extends AbstractGenerationPanel {
 	public function register(): void {
 		add_action( 'add_meta_boxes', array( $this, 'register_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'handle_save_post' ), 10, 3 );
@@ -88,11 +27,10 @@ final class PostEditorPanel {
 	}
 
 	public function render_meta_box( \WP_Post $post ): void {
-		$this->view_renderer->render(
+		$this->render_panel(
 			'post-meta-box.php',
 			array(
 				'post'          => $post,
-				'dry_run'       => ! empty( $this->settings_repository->get()['dry_run'] ),
 				'generate_url'  => admin_url( 'admin-post.php' ),
 				'redirect_url'  => (string) get_edit_post_link( $post->ID, 'raw' ),
 			)
@@ -138,7 +76,7 @@ final class PostEditorPanel {
 	public function handle_save_post( $post_id, $post, $update ): void {
 		unset( $update );
 
-		if ( $this->is_generating || ! $post instanceof \WP_Post ) {
+		if ( $this->is_generation_locked() || ! $post instanceof \WP_Post ) {
 			return;
 		}
 
@@ -169,16 +107,11 @@ final class PostEditorPanel {
 		$overwrite = ! empty( $_POST['wmaigen_overwrite_existing'] );
 		$target    = $this->target_factory->from_post( $post );
 
-		if ( is_wp_error( $target ) ) {
-			$this->notice_repository->add( 'error', esc_html( $target->get_error_message() ) );
-			return;
-		}
-
-		$this->is_generating = true;
-		$result              = $this->generate_service->generate( $target, $overwrite );
-		$this->is_generating = false;
-
-		$this->notice_repository->add( $this->get_notice_type( $result ), $this->build_notice_message( $result ) );
+		$this->run_with_generation_lock(
+			function () use ( $target, $overwrite ): void {
+				$this->process_generation_target( $target, $overwrite );
+			}
+		);
 	}
 
 	/**
@@ -201,45 +134,19 @@ final class PostEditorPanel {
 		$target    = $this->target_factory->from_post_id( $post_id );
 
 		if ( is_wp_error( $target ) ) {
-			$this->notice_repository->add( 'error', esc_html( $target->get_error_message() ) );
+			$this->process_generation_target( $target, $overwrite );
 			wp_safe_redirect( $this->get_post_redirect_url( $post_id ) );
 			exit;
 		}
 
-		$result = $this->generate_service->generate( $target, $overwrite );
-		$this->notice_repository->add( $this->get_notice_type( $result ), $this->build_notice_message( $result ) );
+		$this->run_with_generation_lock(
+			function () use ( $target, $overwrite ): void {
+				$this->process_generation_target( $target, $overwrite );
+			}
+		);
 
 		wp_safe_redirect( $this->get_post_redirect_url( $post_id ) );
 		exit;
-	}
-
-	private function get_notice_type( GenerationResult $result ): string {
-		if ( $result->is_saved() ) {
-			return 'success';
-		}
-
-		if ( $result->is_dry_run() ) {
-			return 'info';
-		}
-
-		if ( $result->is_skipped() ) {
-			return 'warning';
-		}
-
-		return 'error';
-	}
-
-	private function build_notice_message( GenerationResult $result ): string {
-		if ( $result->is_dry_run() || $result->is_saved() ) {
-			return sprintf(
-				'%1$s<br><strong>%2$s</strong> <code>%3$s</code>',
-				esc_html( $result->get_message() ),
-				esc_html__( 'Generated description:', 'wordpress-metadata-aigen' ),
-				esc_html( $result->get_description() )
-			);
-		}
-
-		return esc_html( $result->get_message() );
 	}
 
 	private function get_post_redirect_url( int $post_id ): string {

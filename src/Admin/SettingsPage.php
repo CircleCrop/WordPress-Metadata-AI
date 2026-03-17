@@ -12,38 +12,12 @@ use WMAIGEN\Support\ViewRenderer;
 /**
  * Render and handle the plugin settings page.
  */
-final class SettingsPage {
+final class SettingsPage extends AbstractManageOptionsPage {
 	public const PAGE_SLUG = 'wmaigen-settings';
 
-	/**
-	 * @var SettingsRepository
-	 */
-	private $settings_repository;
-
-	/**
-	 * @var LogRepository
-	 */
-	private $log_repository;
-
-	/**
-	 * @var NoticeRepository
-	 */
-	private $notice_repository;
-
-	/**
-	 * @var TestConnectionService
-	 */
-	private $test_connection_service;
-
-	/**
-	 * @var ViewRenderer
-	 */
-	private $view_renderer;
-
-	/**
-	 * @var TimeFormatter
-	 */
-	private $time_formatter;
+	private SettingsRepository $settings_repository;
+	private LogRepository $log_repository;
+	private TestConnectionService $test_connection_service;
 
 	public function __construct(
 		SettingsRepository $settings_repository,
@@ -53,12 +27,11 @@ final class SettingsPage {
 		ViewRenderer $view_renderer,
 		TimeFormatter $time_formatter
 	) {
+		parent::__construct( $notice_repository, $view_renderer, $time_formatter );
+
 		$this->settings_repository    = $settings_repository;
 		$this->log_repository         = $log_repository;
-		$this->notice_repository      = $notice_repository;
 		$this->test_connection_service = $test_connection_service;
-		$this->view_renderer          = $view_renderer;
-		$this->time_formatter         = $time_formatter;
 	}
 
 	public function register(): void {
@@ -78,22 +51,21 @@ final class SettingsPage {
 	}
 
 	public function render_page(): void {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! $this->can_manage_options() ) {
 			return;
 		}
 
-		$this->view_renderer->render(
+		$this->render_template(
 			'settings-page.php',
 			array(
 				'settings'       => $this->settings_repository->get(),
 				'logs'           => $this->log_repository->get_recent( 20 ),
-				'time_formatter' => $this->time_formatter,
 			)
 		);
 	}
 
 	public function handle_save(): void {
-		$this->assert_manage_options();
+		$this->assert_manage_options( __( 'You are not allowed to manage this plugin.', 'wordpress-metadata-aigen' ) );
 		check_admin_referer( 'wmaigen_save_settings' );
 
 		$raw_settings = isset( $_POST['wmaigen_settings'] ) && is_array( $_POST['wmaigen_settings'] )
@@ -121,28 +93,18 @@ final class SettingsPage {
 			)
 		);
 
-		wp_safe_redirect( $this->get_page_url() );
-		exit;
+		$this->redirect_to( $this->get_page_url() );
 	}
 
 	public function handle_test_connection(): void {
-		$this->assert_manage_options();
+		$this->assert_manage_options( __( 'You are not allowed to manage this plugin.', 'wordpress-metadata-aigen' ) );
 		check_admin_referer( 'wmaigen_test_connection' );
 
 		$result = $this->test_connection_service->run();
 		$type   = ! empty( $result['success'] ) ? 'success' : 'error';
 		$this->notice_repository->add( $type, (string) $result['message'] );
 
-		wp_safe_redirect( $this->get_page_url() );
-		exit;
-	}
-
-	private function assert_manage_options(): void {
-		if ( current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		wp_die( esc_html__( 'You are not allowed to manage this plugin.', 'wordpress-metadata-aigen' ) );
+		$this->redirect_to( $this->get_page_url() );
 	}
 
 	private function get_page_url(): string {

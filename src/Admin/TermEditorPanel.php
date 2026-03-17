@@ -2,71 +2,10 @@
 
 namespace WMAIGEN\Admin;
 
-use WMAIGEN\Application\GenerateDescriptionService;
-use WMAIGEN\Domain\GenerationResult;
-use WMAIGEN\Infrastructure\NoticeRepository;
-use WMAIGEN\Infrastructure\SettingsRepository;
-use WMAIGEN\Infrastructure\TargetFactory;
-use WMAIGEN\Support\ObjectTypeRegistry;
-use WMAIGEN\Support\ViewRenderer;
-
 /**
  * Add single-item generation controls to category and tag edit screens.
  */
-final class TermEditorPanel {
-	/**
-	 * @var ObjectTypeRegistry
-	 */
-	private $object_type_registry;
-
-	/**
-	 * @var SettingsRepository
-	 */
-	private $settings_repository;
-
-	/**
-	 * @var TargetFactory
-	 */
-	private $target_factory;
-
-	/**
-	 * @var GenerateDescriptionService
-	 */
-	private $generate_service;
-
-	/**
-	 * @var NoticeRepository
-	 */
-	private $notice_repository;
-
-	/**
-	 * @var ViewRenderer
-	 */
-	private $view_renderer;
-
-	/**
-	 * Prevent wp_update_term recursion.
-	 *
-	 * @var bool
-	 */
-	private $is_generating = false;
-
-	public function __construct(
-		ObjectTypeRegistry $object_type_registry,
-		SettingsRepository $settings_repository,
-		TargetFactory $target_factory,
-		GenerateDescriptionService $generate_service,
-		NoticeRepository $notice_repository,
-		ViewRenderer $view_renderer
-	) {
-		$this->object_type_registry = $object_type_registry;
-		$this->settings_repository  = $settings_repository;
-		$this->target_factory       = $target_factory;
-		$this->generate_service     = $generate_service;
-		$this->notice_repository    = $notice_repository;
-		$this->view_renderer        = $view_renderer;
-	}
-
+final class TermEditorPanel extends AbstractGenerationPanel {
 	public function register(): void {
 		foreach ( array_keys( $this->object_type_registry->get_supported_taxonomies() ) as $taxonomy ) {
 			add_action( "{$taxonomy}_edit_form_fields", array( $this, 'render_edit_fields' ) );
@@ -80,11 +19,10 @@ final class TermEditorPanel {
 			return;
 		}
 
-		$this->view_renderer->render(
+		$this->render_panel(
 			'term-edit-row.php',
 			array(
 				'term'    => $term,
-				'dry_run' => ! empty( $this->settings_repository->get()['dry_run'] ),
 			)
 		);
 	}
@@ -98,7 +36,7 @@ final class TermEditorPanel {
 	public function handle_edited_term( $term_id, $tt_id, $taxonomy, $args ): void {
 		unset( $tt_id, $args );
 
-		if ( $this->is_generating || empty( $_POST['wmaigen_generate_term'] ) ) {
+		if ( $this->is_generation_locked() || empty( $_POST['wmaigen_generate_term'] ) ) {
 			return;
 		}
 
@@ -119,44 +57,10 @@ final class TermEditorPanel {
 		$overwrite = ! empty( $_POST['wmaigen_overwrite_existing'] );
 		$target    = $this->target_factory->from_term_id( (int) $term_id, (string) $taxonomy );
 
-		if ( is_wp_error( $target ) ) {
-			$this->notice_repository->add( 'error', esc_html( $target->get_error_message() ) );
-			return;
-		}
-
-		$this->is_generating = true;
-		$result              = $this->generate_service->generate( $target, $overwrite );
-		$this->is_generating = false;
-
-		$this->notice_repository->add( $this->get_notice_type( $result ), $this->build_notice_message( $result ) );
-	}
-
-	private function get_notice_type( GenerationResult $result ): string {
-		if ( $result->is_saved() ) {
-			return 'success';
-		}
-
-		if ( $result->is_dry_run() ) {
-			return 'info';
-		}
-
-		if ( $result->is_skipped() ) {
-			return 'warning';
-		}
-
-		return 'error';
-	}
-
-	private function build_notice_message( GenerationResult $result ): string {
-		if ( $result->is_dry_run() || $result->is_saved() ) {
-			return sprintf(
-				'%1$s<br><strong>%2$s</strong> <code>%3$s</code>',
-				esc_html( $result->get_message() ),
-				esc_html__( 'Generated description:', 'wordpress-metadata-aigen' ),
-				esc_html( $result->get_description() )
-			);
-		}
-
-		return esc_html( $result->get_message() );
+		$this->run_with_generation_lock(
+			function () use ( $target, $overwrite ): void {
+				$this->process_generation_target( $target, $overwrite );
+			}
+		);
 	}
 }

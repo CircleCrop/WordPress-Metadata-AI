@@ -15,53 +15,15 @@ use WMAIGEN\Support\ViewRenderer;
 /**
  * Batch scan and generation admin page.
  */
-final class ToolsPage {
+final class ToolsPage extends AbstractManageOptionsPage {
 	public const PAGE_SLUG = 'wmaigen-tools';
 
-	/**
-	 * @var BatchStateRepository
-	 */
-	private $batch_state_repository;
-
-	/**
-	 * @var BatchScanService
-	 */
-	private $batch_scan_service;
-
-	/**
-	 * @var BatchRunService
-	 */
-	private $batch_run_service;
-
-	/**
-	 * @var LogRepository
-	 */
-	private $log_repository;
-
-	/**
-	 * @var NoticeRepository
-	 */
-	private $notice_repository;
-
-	/**
-	 * @var SettingsRepository
-	 */
-	private $settings_repository;
-
-	/**
-	 * @var ObjectTypeRegistry
-	 */
-	private $object_type_registry;
-
-	/**
-	 * @var ViewRenderer
-	 */
-	private $view_renderer;
-
-	/**
-	 * @var TimeFormatter
-	 */
-	private $time_formatter;
+	private BatchStateRepository $batch_state_repository;
+	private BatchScanService $batch_scan_service;
+	private BatchRunService $batch_run_service;
+	private LogRepository $log_repository;
+	private SettingsRepository $settings_repository;
+	private ObjectTypeRegistry $object_type_registry;
 
 	public function __construct(
 		BatchStateRepository $batch_state_repository,
@@ -74,15 +36,14 @@ final class ToolsPage {
 		ViewRenderer $view_renderer,
 		TimeFormatter $time_formatter
 	) {
+		parent::__construct( $notice_repository, $view_renderer, $time_formatter );
+
 		$this->batch_state_repository = $batch_state_repository;
 		$this->batch_scan_service     = $batch_scan_service;
 		$this->batch_run_service      = $batch_run_service;
 		$this->log_repository         = $log_repository;
-		$this->notice_repository      = $notice_repository;
 		$this->settings_repository    = $settings_repository;
 		$this->object_type_registry   = $object_type_registry;
-		$this->view_renderer          = $view_renderer;
-		$this->time_formatter         = $time_formatter;
 	}
 
 	public function register(): void {
@@ -102,27 +63,26 @@ final class ToolsPage {
 	}
 
 	public function render_page(): void {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! $this->can_manage_options() ) {
 			return;
 		}
 
 		$batch_state = $this->batch_state_repository->get();
 
-		$this->view_renderer->render(
+		$this->render_template(
 			'tools-page.php',
 			array(
 				'batch_state'          => $batch_state,
-				'dry_run'              => ! empty( $this->settings_repository->get()['dry_run'] ),
+				'dry_run'              => $this->settings_repository->is_dry_run_enabled(),
 				'filter_options'       => $this->object_type_registry->get_batch_filter_options(),
 				'object_type_registry' => $this->object_type_registry,
 				'logs'                 => $this->log_repository->get_recent( 30 ),
-				'time_formatter'       => $this->time_formatter,
 			)
 		);
 	}
 
 	public function handle_scan(): void {
-		$this->assert_manage_options();
+		$this->assert_manage_options( __( 'You are not allowed to use the batch tools.', 'wordpress-metadata-aigen' ) );
 		check_admin_referer( 'wmaigen_scan_batch' );
 
 		$filter = isset( $_POST['object_filter'] ) ? sanitize_key( (string) wp_unslash( $_POST['object_filter'] ) ) : 'all';
@@ -161,20 +121,18 @@ final class ToolsPage {
 			);
 		}
 
-		wp_safe_redirect( $this->get_page_url() );
-		exit;
+		$this->redirect_to( $this->get_page_url() );
 	}
 
 	public function handle_run(): void {
-		$this->assert_manage_options();
+		$this->assert_manage_options( __( 'You are not allowed to use the batch tools.', 'wordpress-metadata-aigen' ) );
 		check_admin_referer( 'wmaigen_run_batch' );
 
 		$state = $this->batch_state_repository->get();
 
 		if ( ! is_array( $state ) || empty( $state['candidates'] ) || ! is_array( $state['candidates'] ) ) {
 			$this->notice_repository->add( 'error', __( 'No batch preview is available. Run a scan first.', 'wordpress-metadata-aigen' ) );
-			wp_safe_redirect( $this->get_page_url() );
-			exit;
+			$this->redirect_to( $this->get_page_url() );
 		}
 
 		$summary = $this->batch_run_service->run( $state['candidates'] );
@@ -194,16 +152,7 @@ final class ToolsPage {
 			)
 		);
 
-		wp_safe_redirect( $this->get_page_url() );
-		exit;
-	}
-
-	private function assert_manage_options(): void {
-		if ( current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		wp_die( esc_html__( 'You are not allowed to use the batch tools.', 'wordpress-metadata-aigen' ) );
+		$this->redirect_to( $this->get_page_url() );
 	}
 
 	private function get_page_url(): string {

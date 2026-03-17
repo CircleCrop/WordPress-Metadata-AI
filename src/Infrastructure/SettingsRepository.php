@@ -42,6 +42,15 @@ final class SettingsRepository {
 	}
 
 	/**
+	 * @param array<string, mixed>|null $settings Settings override.
+	 */
+	public function is_dry_run_enabled( ?array $settings = null ): bool {
+		$current = is_array( $settings ) ? $settings : $this->get();
+
+		return ! empty( $current['dry_run'] );
+	}
+
+	/**
 	 * @param array<string, mixed> $raw_settings Untrusted settings input.
 	 * @return array<string, mixed>
 	 */
